@@ -6,31 +6,30 @@ using UnityEngine.SceneManagement;
 
 public class QuadSettings : MonoBehaviour
 {
-    public GameObject QuadCharacteristicsObj;
+    //public GameObject QuadCharacteristicsObj;
 
     public GameObject PID_Settings;
 
-    public GameObject Cam_Settings;
+    //public GameObject Cam_Settings;
 
-    public GameObject Battery_Settings;
+    //public GameObject Battery_Settings;
 
     public Quad quad;
 
     SliderSync pitch_P_slider, pitch_I_slider, pitch_D_slider,
                 yaw_P_slider, yaw_I_slider, yaw_D_slider,
-                roll_P_slider, roll_I_slider, roll_D_slider,
-                cam_angle_slider, cam_fov_slider, cam_mass_slider,
-                battery_mass_slider, battery_max_charge_slider,
-                quad_mass;
-    Toggle cam_fp_ckeck;
+                roll_P_slider, roll_I_slider, roll_D_slider;
+                
 
     private void Awake()
     {
-        DataManager.TestLoad();
+        //DataManager.TestLoad();
         GetSlyders();
+    }
+    private void Start()
+    {
         SendOldDataToUI();
     }
-
     private void Update()
     {
  
@@ -50,7 +49,7 @@ public class QuadSettings : MonoBehaviour
         roll_I_slider = PID_Settings.transform.Find("Roll").Find("I").GetComponent<SliderSync>();
         roll_D_slider = PID_Settings.transform.Find("Roll").Find("D").GetComponent<SliderSync>();
 
-        cam_angle_slider = Cam_Settings.transform.Find("Angle").GetComponent<SliderSync>();
+       /* cam_angle_slider = Cam_Settings.transform.Find("Angle").GetComponent<SliderSync>();
         cam_fov_slider = Cam_Settings.transform.Find("FOV").GetComponent<SliderSync>();
         cam_mass_slider = Cam_Settings.transform.Find("Mass").GetComponent<SliderSync>();
         cam_fp_ckeck = Cam_Settings.transform.Find("FP").GetComponent<Toggle>();
@@ -58,12 +57,9 @@ public class QuadSettings : MonoBehaviour
         battery_mass_slider = Battery_Settings.transform.Find("Mass").GetComponent<SliderSync>();
         battery_max_charge_slider = Battery_Settings.transform.Find("MaxCharge").GetComponent<SliderSync>();
 
-        quad_mass = QuadCharacteristicsObj.transform.Find("Mass").GetComponent<SliderSync>();
+        quad_mass = QuadCharacteristicsObj.transform.Find("Mass").GetComponent<SliderSync>();*/
     }
-    public void QuitButton()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
+
     public void ApplyButton()
     {
         ApplyNewData();
@@ -84,7 +80,7 @@ public class QuadSettings : MonoBehaviour
         roll_P_slider.SetValue(PID_Properties.roll_P);
         roll_I_slider.SetValue(PID_Properties.roll_I);
         roll_D_slider.SetValue(PID_Properties.roll_D);
-
+        /*
         quad_mass.SetValue(QuadCharacteristics.mass);
 
         cam_angle_slider.SetValue(CameraProperties.firstPersonCameraAngle);
@@ -93,13 +89,11 @@ public class QuadSettings : MonoBehaviour
         cam_fp_ckeck.isOn = CameraProperties.isFirstPersonCamOn;
 
         battery_mass_slider.SetValue(Baterry.mass);
-        battery_max_charge_slider.SetValue(Baterry.maxCharge);
+        battery_max_charge_slider.SetValue(Baterry.maxCharge);*/
     }
 
     private void ApplyNewData()
     {
-        QuadCharacteristics.mass = quad_mass.GetValue();
-
         PID_Properties.pitch_P = pitch_P_slider.GetValue();
         PID_Properties.pitch_I = pitch_I_slider.GetValue();
         PID_Properties.pitch_D = pitch_D_slider.GetValue();
@@ -111,13 +105,14 @@ public class QuadSettings : MonoBehaviour
         PID_Properties.roll_P = roll_P_slider.GetValue();
         PID_Properties.roll_I = roll_I_slider.GetValue();
         PID_Properties.roll_D = roll_D_slider.GetValue();
-
+        /*
+        QuadCharacteristics.mass = quad_mass.GetValue();
         CameraProperties.firstPersonCameraAngle = cam_angle_slider.GetValue();
         CameraProperties.FOV = cam_fov_slider.GetValue();
         CameraProperties.mass = cam_mass_slider.GetValue();
         CameraProperties.isFirstPersonCamOn = cam_fp_ckeck.isOn;
 
         Baterry.mass = battery_mass_slider.GetValue();
-        Baterry.maxCharge = battery_max_charge_slider.GetValue();
+        Baterry.maxCharge = battery_max_charge_slider.GetValue();*/
     }
 }

@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 2862510171155541058}
   - component: {fileID: 1068468500627182331}
   - component: {fileID: 2305022166316969465}
+  - component: {fileID: 8216845687628963841}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -195,6 +196,7 @@ MonoBehaviour:
   ghost: {fileID: 7642720989425128438}
   spawnPoint: {fileID: 0}
   flyMode: 0
+  throttle_K: 10
 --- !u!114 &1068468500627182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,7 +247,22 @@ MonoBehaviour:
     yaw: 0
     pitch: 0
     convertion_K: 15
-  uiManager: {fileID: 0}
+--- !u!114 &8216845687628963841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212575548603286626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdf6f9584376044498cb382ef2d98be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 0}
+  playerUI: {fileID: 0}
+  speedValue: {fileID: 0}
+  flyModeValue: {fileID: 0}
 --- !u!1 &231212460528334851
 GameObject:
   m_ObjectHideFlags: 0
@@ -1343,7 +1360,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 14
+  m_Constraints: 0
   m_CollisionDetection: 1
 --- !u!65 &1721490738269026383
 BoxCollider:
@@ -2025,7 +2042,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &359869237166164243
 Transform:
   m_ObjectHideFlags: 0
@@ -2206,7 +2223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5080436841895475624
 Transform:
   m_ObjectHideFlags: 0

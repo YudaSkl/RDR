@@ -12,12 +12,19 @@ public class GameplaySettings : MonoBehaviour
 
     void Awake()
     {
+        GetSliders();
+    }
+
+    private void Start()
+    {
+        SendOldDataToUI();
+    }
+
+    public void GetSliders()
+    {
         musicVolume_slider = transform.Find("MusicVolume").GetComponent<SliderSync>();
         effectVolume_slider = transform.Find("EffectVolume").GetComponent<SliderSync>();
         controlSelector = transform.Find("Controls").GetComponent<Dropdown>();
-        
-        
-        SendOldDataToUI();
     }
 
     public void ControlChanged()

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class InputManager : MonoBehaviour
 {
@@ -14,7 +16,6 @@ public class InputManager : MonoBehaviour
     public Converted_Values convertedValues;
 
     Quad quadScript;
-    public UIManager uiManager;
 
     public void SetControlMap(ControlMap cm)
     {
@@ -128,7 +129,10 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) { ChangeUI(); }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (quadScript.GetComponent<UIManager>() != null) ChangeUI();
+        }
     }
 
     private void FixedUpdate()
@@ -178,6 +182,7 @@ public class InputManager : MonoBehaviour
                 convertedValues.pitch = inputValues.pitch * convertedValues.convertion_K;
                 break;
         }
+        Debug.Log("Input Manager Convert: " + convertedValues.throttle);
     }
 
     void FlyModeChange(FlyMode flyModeValue)
@@ -226,6 +231,6 @@ public class InputManager : MonoBehaviour
 
     void ChangeUI()
     {
-        uiManager.ChangeUI();
+        quadScript.GetComponent<UIManager>().ChangeUI();
     }
 }

@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 [RequireComponent(typeof(PIDManager))]
-[RequireComponent(typeof(InputManager))]
 
 public class Quad : MonoBehaviour
 {
@@ -16,12 +16,13 @@ public class Quad : MonoBehaviour
 
     Rigidbody body;
     InputManager inputManager;
+    UIManager uiManager;
+    PhotonView photonView;
+
     [HideInInspector]
     public PIDManager pidManager;
 
     public QuadGhost ghost;
-    public GameObject spawnPoint;
-
     private AudioSource audioSourceQuad;
     private float maxEffectVolume;
 
@@ -30,52 +31,36 @@ public class Quad : MonoBehaviour
     public float throttle_K;
     #endregion
 
-
-    #region Setup
-    void RigitbodySetup()
-    {
-        body.mass = QuadCharacteristics.mass;
-    }
-    void CameraSetup()
-    {
-        cam.firstPersonCamera.transform.eulerAngles = new Vector3(-CameraProperties.firstPersonCameraAngle, 0, 0);
-        cam.firstPersonCamera.fieldOfView = CameraProperties.FOV;
-        cam.thirdPersonCamera.fieldOfView = CameraProperties.FOV;
-        ChangeCam(CameraProperties.isFirstPersonCamOn);
-    }
-    void QuadSetup()
-    {
-        transform.rotation = spawnPoint.transform.rotation;
-        transform.position = spawnPoint.transform.position;
-        transform.SetPositionAndRotation(spawnPoint.transform.position, new Quaternion(spawnPoint.transform.rotation.x, spawnPoint.transform.rotation.y, spawnPoint.transform.rotation.z, 0));
-    }
-    void AudioSetup()
-    {
-        audioSourceQuad = GetComponent<AudioSource>();
-        maxEffectVolume = Parameters.effectVolume;
-    }
-    #endregion
-
-    public void SetUp()
-    {
-        RigitbodySetup();
-        QuadSetup();
-        CameraSetup();
-        AudioSetup();
-        pidManager.PIDSetup();
-    }
-
     private void Awake()
     {
         DataManager.TestLoad();
+        photonView = GetComponentInParent<PhotonView>();
+
+        inputManager = GetComponent<InputManager>();
+        uiManager = GetComponent<UIManager>();
+        pidManager = GetComponent<PIDManager>();
+        audioSourceQuad = GetComponent<AudioSource>();
+        //body = transform.Find("Body").GetComponent<Rigidbody>();
+        body = GetComponent<Rigidbody>();
+        if (!photonView.IsMine)
+        {
+            inputManager.enabled = false;
+            if (uiManager != null) { uiManager.enabled = false; }
+            pidManager.enabled = false;
+            audioSourceQuad.enabled = false;
+            ghost.gameObject.SetActive(false);
+            cam.firstPersonCamera.gameObject.SetActive(false);
+            cam.thirdPersonCamera.gameObject.SetActive(false);
+            this.enabled = false;
+            return;
+        }
+
+        SetUp();
     }
 
     void Start()
     {
-        inputManager = GetComponent<InputManager>();
-        pidManager = GetComponent<PIDManager>();
-        body = transform.Find("Body").GetComponent<Rigidbody>();
-        SetUp();
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -93,7 +78,35 @@ public class Quad : MonoBehaviour
             //Start()
         }
     }
+    #region Setup
+    void RigitbodySetup()
+    {
+        body.mass = QuadCharacteristics.mass;
+    }
+    void CameraSetup()
+    {
+        cam.firstPersonCamera.transform.eulerAngles = new Vector3(-CameraProperties.firstPersonCameraAngle, 0, 0);
+        cam.firstPersonCamera.fieldOfView = CameraProperties.FOV;
+        cam.thirdPersonCamera.fieldOfView = CameraProperties.FOV;
+        ChangeCam(CameraProperties.isFirstPersonCamOn);
+    }
+    void GhostSetup()
+    {
+        ghost.SetUp(body.rotation);
+    }
+    void AudioSetup()
+    {
+        maxEffectVolume = Parameters.effectVolume;
+    }
+    #endregion
 
+    public void SetUp()
+    {
+        RigitbodySetup();
+        GhostSetup();
+        CameraSetup();
+        AudioSetup();
+    }
     void ChangeCam(bool isFirst)
     {
         if (isFirst)
@@ -124,7 +137,11 @@ public class Quad : MonoBehaviour
         SetAudio();
         AddThrottlePower();
         AddStabilizePower(ghost.GetRotation());
-        //ShowInfo();
+        if (uiManager!=null && uiManager.isActiveAndEnabled)
+        {
+            ShowInfo();
+        }
+        
         //Debug.Log("Pitch_PID: (" + PID_Properties.pitch_P + ", " + PID_Properties.pitch_I + ", " + PID_Properties.pitch_D + ")");
         //Debug.Log("Control System: " + Parameters.controlMap.ToString());
     }
@@ -140,6 +157,7 @@ public class Quad : MonoBehaviour
         propellers.propellerBR.SetPower(inputManager.convertedValues.throttle * throttle_K / 4);
         propellers.propellerFL.SetPower(inputManager.convertedValues.throttle * throttle_K / 4);
         propellers.propellerFR.SetPower(inputManager.convertedValues.throttle * throttle_K / 4);
+        //Debug.Log("Input: " + inputManager.inputValues.throttle + " Converted: " + inputManager.convertedValues.throttle + " Result: " + inputManager.convertedValues.throttle * throttle_K / 4);
     }
 
     private float GetPitchError(Quaternion targetRotation)
@@ -230,7 +248,7 @@ public class Quad : MonoBehaviour
         int speed = Mathf.RoundToInt(Mathf.Max(body.velocity.x, -body.velocity.y, body.velocity.z));
         if (speed < 0)
             speed = 0;
-        inputManager.uiManager.SetSpeed(speed);
-        inputManager.uiManager.SetFlyMode(flyMode);
+        uiManager.SetSpeed(speed);
+        uiManager.SetFlyMode(flyMode);
     }
 }

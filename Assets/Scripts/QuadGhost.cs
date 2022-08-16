@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class QuadGhost : MonoBehaviour
 {
-    public Quad quad;
+    public Quad quadBody;
     InputManager inputManager;
     public float maxAngle;
     public float yawSpeed;
     float yRot = 0;
     private void Start()
     {
-        //body = GetComponent<Rigidbody>();
-        inputManager = quad.GetComponent<InputManager>();
-        transform.rotation = quad.transform.rotation;
-        
+        inputManager = quadBody.GetComponent<InputManager>();
+        transform.rotation = quadBody.transform.rotation;
     }
-    
+    public void SetUp(Quaternion rotation)
+    {
+        transform.rotation = rotation;
+    }
     void AngleGhost()
     {
         float xRot = inputManager.inputValues.pitch * maxAngle;
@@ -32,7 +33,7 @@ public class QuadGhost : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position = quad.transform.Find("Body").transform.position;
+        transform.position = quadBody.transform.position;
         AngleGhost();
     }
 

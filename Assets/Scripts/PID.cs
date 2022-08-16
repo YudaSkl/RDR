@@ -20,7 +20,7 @@ public class PID
     //float error_sum2 = 0f;
 
     //Sometimes you have to limit the total sum of all errors used in the I
-    private float error_sumMax = 20f;
+    private readonly float error_sumMax = 20f;
     //private bool isOn;
     public float prevErr;
 

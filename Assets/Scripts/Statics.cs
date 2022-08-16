@@ -47,8 +47,8 @@ public static class DataManager
 
 		QuadCharacteristics.mass = 6;
 
-		Parameters.musicVolume = 20;
-		Parameters.effectVolume = 10;
+		Parameters.musicVolume = 1;
+		Parameters.effectVolume = 1;
 		//Parameters.controlMap = ControlMap.FrSkyTaranisX7;
 	}
 }

@@ -24,8 +24,8 @@ public class Propeller : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody>();
-        body.maxAngularVelocity = 0;
-        body.useGravity = false;
+        //body.maxAngularVelocity = 0;
+        //body.useGravity = false;
     }
 
     void FixedUpdate()

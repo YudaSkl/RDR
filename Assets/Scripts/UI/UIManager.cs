@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
 
     public void SetSpeed(int speed)
     {
-        speedValue.text = speed.ToString() + "ÊÌ/×";
+        speedValue.text = speed.ToString() + " ÊÌ/×";
     }
     public void SetFlyMode(FlyMode fm)
     {
@@ -90,6 +90,7 @@ public class UIManager : MonoBehaviour
 
     public void PressExit()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu");
     }
 }

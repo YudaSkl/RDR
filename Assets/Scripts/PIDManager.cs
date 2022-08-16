@@ -14,20 +14,19 @@ public class PIDManager : MonoBehaviour
 
     [Range(0, 100)]
     public int PitchP, PitchI, PitchD, RollP, RollI, RollD, YawP, YawI, YawD;
-    
 
-    void Start()
-    {
-
-    }
-
-    public void PIDSetup()
+    private void Awake()
     {
         pidCorrection = new PID_Correction();
         pitchPID = new PID(PID_Properties.pitch_P, PID_Properties.pitch_I, PID_Properties.pitch_D);
         rollPID = new PID(PID_Properties.roll_P, PID_Properties.roll_I, PID_Properties.roll_D);
         yawPID = new PID(PID_Properties.yaw_P, PID_Properties.yaw_I, PID_Properties.yaw_D);
     }
+    void Start()
+    {
+
+    }
+
     private void Update()
     {
         //Для тестов пида в реальном времени через палзунки

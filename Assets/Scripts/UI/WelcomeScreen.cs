@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class WelcomeScreen : MonoBehaviour
 {
-    Controlls control;
-
     void Start()
     {
         DataManager.TestLoad();
@@ -22,6 +20,6 @@ public class WelcomeScreen : MonoBehaviour
 
     void Pressed()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenuScene");
     }
 }
