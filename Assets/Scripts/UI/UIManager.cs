@@ -91,6 +91,6 @@ public class UIManager : MonoBehaviour
     public void PressExit()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(Scene.MainMenuScene.ToString());
     }
 }

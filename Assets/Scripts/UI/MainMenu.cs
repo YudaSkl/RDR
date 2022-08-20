@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Photon.Realtime;
+
 public class MainMenu : MonoBehaviourPunCallbacks
 {
-    public GameObject ChooseMapUI;
-    public GameObject ConnectionUI;
-    public GameObject QuadSettingsUI;
-    public GameObject GameplaySettingsUI;
+    public List<MenuPanelComponent> panels;
+    public GameObject QuadGameObj;
 
-    public GameObject Quad;
-    private GameObject currPanel;
-
+    string serversUIName = "ServersUI";
     void Start()
     {
-        currPanel = null;
         ShowPanel(null);
     }
 
@@ -25,47 +22,57 @@ public class MainMenu : MonoBehaviourPunCallbacks
     }
     private void Awake()
     {
-        GameplaySettingsUI.SetActive(false);
-        ChooseMapUI.SetActive(false);
-        QuadSettingsUI.SetActive(false);
-        ConnectionUI.SetActive(false);
-        //Quad.SetActive(false);
-    }
-    public void PressTesting() { ShowPanel(ChooseMapUI); }
 
-    public void PressRace() { 
-        ShowPanel(ConnectionUI);
-        PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public void PressQuadSettings(string panelName)
+    {
+        ShowPanel(panelName);
+        QuadGameObj.SetActive(true);
+        //Debug.Log(QuadGameObj.activeSelf);
+        QuadGameObj.GetComponent<MenuQuad>().Respawn();
     }
 
     public override void OnConnectedToMaster()
     {
-        //Debug.Log("OnConnectedToMaster");
-        SceneManager.LoadScene("SearchRaceScene");
-        //PhotonNetwork.JoinRandomRoom();
+        Debug.Log("OnConnectedToMaster");
+        ShowPanel(serversUIName);
     }
-
-    public void PressQuadSettings() 
-    { 
-        ShowPanel(QuadSettingsUI); 
-        //Quad.SetActive(true); 
-        //Quad.GetComponent<Quad>().Respawn(); 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        Debug.Log("Disconected: " + cause.ToString());
+        ShowPanel(null);
     }
-
-    public void PressGameplaySettings() { ShowPanel(GameplaySettingsUI); }
+    public void PressConnect(string panelName)
+    {
+        ShowPanel(panelName);
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.Log("Connecting...");
+            PhotonNetwork.ConnectUsingSettings();
+        }
+        else
+        {
+            Debug.Log("Already Connected");
+            ShowPanel(serversUIName);
+        }
+    }
 
     public void PressQuit()
     {
         Application.Quit();
     }
 
-    public void PressApply() { ShowPanel(null); }
-
-    void ShowPanel(GameObject panel)
+    public void ShowPanel(string panelName)
     {
-        if (currPanel) currPanel.SetActive(false);
-        //Quad.SetActive(false);
-        currPanel = panel;
-        if (currPanel) currPanel.SetActive(true);
+        if(QuadGameObj != null) QuadGameObj.SetActive(false);
+        foreach (MenuPanelComponent panel in panels)
+        {
+            if (panel.name == panelName)
+                panel.Show();
+            else
+                panel.Hide();
+        }
     }
 }

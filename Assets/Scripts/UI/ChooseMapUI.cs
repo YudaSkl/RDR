@@ -31,6 +31,6 @@ public class ChooseMapUI : MonoBehaviour
 
     public void PressTestMapButton()
     {
-        SceneManager.LoadScene("TestMap");
+        SceneManager.LoadScene(Scene.TestMap.ToString());
     }
 }

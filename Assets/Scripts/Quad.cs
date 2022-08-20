@@ -16,7 +16,7 @@ public class Quad : MonoBehaviour
 
     Rigidbody body;
     InputManager inputManager;
-    UIManager uiManager;
+    public UIManager uiManager;
     PhotonView photonView;
 
     [HideInInspector]
@@ -33,14 +33,10 @@ public class Quad : MonoBehaviour
 
     private void Awake()
     {
-        DataManager.TestLoad();
         photonView = GetComponentInParent<PhotonView>();
-
         inputManager = GetComponent<InputManager>();
-        uiManager = GetComponent<UIManager>();
         pidManager = GetComponent<PIDManager>();
         audioSourceQuad = GetComponent<AudioSource>();
-        //body = transform.Find("Body").GetComponent<Rigidbody>();
         body = GetComponent<Rigidbody>();
         if (!photonView.IsMine)
         {
@@ -49,8 +45,7 @@ public class Quad : MonoBehaviour
             pidManager.enabled = false;
             audioSourceQuad.enabled = false;
             ghost.gameObject.SetActive(false);
-            cam.firstPersonCamera.gameObject.SetActive(false);
-            cam.thirdPersonCamera.gameObject.SetActive(false);
+            DisableCameras();
             this.enabled = false;
             return;
         }
@@ -88,11 +83,13 @@ public class Quad : MonoBehaviour
         cam.firstPersonCamera.transform.eulerAngles = new Vector3(-CameraProperties.firstPersonCameraAngle, 0, 0);
         cam.firstPersonCamera.fieldOfView = CameraProperties.FOV;
         cam.thirdPersonCamera.fieldOfView = CameraProperties.FOV;
-        ChangeCam(CameraProperties.isFirstPersonCamOn);
+        if (CameraProperties.isFirstPersonCamOn)
+            ChangeCam(cam.firstPersonCamera);
+        else ChangeCam(cam.thirdPersonCamera);
     }
     void GhostSetup()
     {
-        ghost.SetUp(body.rotation);
+        //ghost.SetUp(transform.parent.rotation);
     }
     void AudioSetup()
     {
@@ -107,24 +104,11 @@ public class Quad : MonoBehaviour
         CameraSetup();
         AudioSetup();
     }
-    void ChangeCam(bool isFirst)
+
+    void ChangeCam(Camera camera)
     {
-        if (isFirst)
-        {
-            cam.thirdPersonCamera.enabled = false;
-            cam.thirdPersonCamera.GetComponent<AudioListener>().enabled = false;
-
-            cam.firstPersonCamera.enabled = true;
-            cam.firstPersonCamera.GetComponent<AudioListener>().enabled = true;
-        }
-        else
-        {
-            cam.firstPersonCamera.enabled = false;
-            cam.firstPersonCamera.GetComponent<AudioListener>().enabled = false;
-
-            cam.thirdPersonCamera.enabled = true;
-            cam.thirdPersonCamera.GetComponent<AudioListener>().enabled = true;
-        }
+        DisableCameras();
+        camera.gameObject.SetActive(true);
     }
 
     public void Respawn()
@@ -250,5 +234,14 @@ public class Quad : MonoBehaviour
             speed = 0;
         uiManager.SetSpeed(speed);
         uiManager.SetFlyMode(flyMode);
+    }
+    public Rigidbody GetRigidbody()
+    {
+        return body;
+    }
+    public void DisableCameras()
+    {
+        cam.firstPersonCamera.gameObject.SetActive(false);
+        cam.thirdPersonCamera.gameObject.SetActive(false);
     }
 }

@@ -34,7 +34,8 @@ public class GameplaySettings : MonoBehaviour
             case 0: Parameters.controlMap = ControlMap.FrSkyTaranisX7; break;
             case 1: Parameters.controlMap = ControlMap.FrSkyTaranis; break;
             case 2: Parameters.controlMap = ControlMap.Xbox; break;
-            default: Parameters.controlMap = ControlMap.FrSkyTaranisX7; break;
+            case 3: Parameters.controlMap = ControlMap.Keyboard; break;
+            default: Parameters.controlMap = ControlMap.Keyboard; break;
         }
     }
 

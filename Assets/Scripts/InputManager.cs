@@ -15,8 +15,7 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     public Converted_Values convertedValues;
 
-    Quad quadScript;
-
+    Quad quad;
     public void SetControlMap(ControlMap cm)
     {
         controlMap = cm;
@@ -32,7 +31,7 @@ public class InputManager : MonoBehaviour
     }
     private void SetKeyboard()
     {
-        control.Keyboard.Throttle.performed += ctx => inputValues.throttle = ctx.ReadValue<float>();
+        control.Keyboard.Throttle.performed += ctx => inputValues.throttle = 1;
         control.Keyboard.Throttle.canceled += ctx => inputValues.throttle = 0;
 
         control.Keyboard.Yaw.performed += ctx => inputValues.yaw = ctx.ReadValue<float>();
@@ -113,11 +112,13 @@ public class InputManager : MonoBehaviour
 
     void Awake()
     {
-        quadScript = GetComponent<Quad>();
         control = new Controlls();
         SetControlMap(Parameters.controlMap);
     }
-
+    private void Start()
+    {
+        quad = GetComponent<Quad>();
+    }
     private void OnEnable()
     {
         control.Enable();
@@ -131,7 +132,7 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (quadScript.GetComponent<UIManager>() != null) ChangeUI();
+            if (quad.uiManager != null) ChangeUI();
         }
     }
 
@@ -145,7 +146,11 @@ public class InputManager : MonoBehaviour
         switch (controlMap)
         {
             case ControlMap.Keyboard:
-                convertedValues.throttle = inputValues.throttle * convertedValues.convertion_K;
+                //float rollInput = Input.GetAxis("RollAxis");
+                //float pitchInput = Input.GetAxis("PitchAxis");
+                //float yawInput = Input.GetAxis("YawAxis");
+                //if(Input.GetKeyDown(KeyCode.Space)) 
+                convertedValues.throttle = inputValues.throttle * 10 * convertedValues.convertion_K;
                 convertedValues.roll = inputValues.roll * convertedValues.convertion_K;
                 convertedValues.yaw = inputValues.yaw * convertedValues.convertion_K;
                 convertedValues.pitch = inputValues.pitch * convertedValues.convertion_K;
@@ -182,7 +187,7 @@ public class InputManager : MonoBehaviour
                 convertedValues.pitch = inputValues.pitch * convertedValues.convertion_K;
                 break;
         }
-        Debug.Log("Input Manager Convert: " + convertedValues.throttle);
+        //Debug.Log("Input Manager Convert: " + convertedValues.throttle);
     }
 
     void FlyModeChange(FlyMode flyModeValue)
@@ -194,43 +199,46 @@ public class InputManager : MonoBehaviour
             case FlyMode.Arm: break;
             default:break;
         }
-        quadScript.flyMode = flyModeValue;
+        quad.flyMode = flyModeValue;
     }
 
     void FlyModeChange(int value)
     {
         if (value == 1)
         {
-            if (quadScript.flyMode == FlyMode.Default)
-                quadScript.flyMode = FlyMode.Stab;
+            if (quad.flyMode == FlyMode.Default)
+                quad.flyMode = FlyMode.Stab;
             else
-                quadScript.flyMode = FlyMode.Default;
+                quad.flyMode = FlyMode.Default;
         }
     }
 
     void DropYawStick()
     {
+        if (quad == null) return;
         inputValues.yaw = 0;
-        quadScript.pidManager.yawPID.Drop();
-        quadScript.pidManager.pidCorrection.yaw = 0;
+        quad.pidManager.yawPID.Drop();
+        quad.pidManager.pidCorrection.yaw = 0;
     }
 
     void DropRollStick()
     {
+        if (quad == null) return;
         inputValues.roll = 0;
-        quadScript.pidManager.rollPID.Drop();
-        quadScript.pidManager.pidCorrection.roll = 0;
+        quad.pidManager.rollPID.Drop();
+        quad.pidManager.pidCorrection.roll = 0;
     }
 
     void DropPitchStick()
     {
+        if (quad == null) return;
         inputValues.pitch = 0;
-        quadScript.pidManager.pitchPID.Drop();
-        quadScript.pidManager.pidCorrection.pitch = 0;
+        quad.pidManager.pitchPID.Drop();
+        quad.pidManager.pidCorrection.pitch = 0;
     }
 
     void ChangeUI()
     {
-        quadScript.GetComponent<UIManager>().ChangeUI();
+        quad.uiManager.ChangeUI();
     }
 }

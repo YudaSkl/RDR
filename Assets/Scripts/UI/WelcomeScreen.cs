@@ -6,8 +6,9 @@ public class WelcomeScreen : MonoBehaviour
 {
     void Start()
     {
-        DataManager.TestLoad();
-        Parameters.controlMap = ControlMap.FrSkyTaranisX7;
+        DataManager.LoadAll();
+        //DataManager.TestLoad();
+        Parameters.controlMap = ControlMap.Keyboard;
     }
 
     void Update()
@@ -20,6 +21,6 @@ public class WelcomeScreen : MonoBehaviour
 
     void Pressed()
     {
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene(Scene.MainMenuScene.ToString());
     }
 }

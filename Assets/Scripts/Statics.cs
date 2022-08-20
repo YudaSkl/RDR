@@ -23,7 +23,7 @@ public static class DataManager
 	{
 		PlayerPrefs.DeleteAll();
 	}
-
+	/*
 	static public void TestLoad()
     {
 		PID_Properties.pitch_P = 60;
@@ -50,7 +50,7 @@ public static class DataManager
 		Parameters.musicVolume = 1;
 		Parameters.effectVolume = 1;
 		//Parameters.controlMap = ControlMap.FrSkyTaranisX7;
-	}
+	}*/
 }
 
 public static class PID_Properties
@@ -131,7 +131,7 @@ public static class CameraProperties
 	}
 	public static void Load()
 	{
-		firstPersonCameraAngle = PlayerPrefs.GetFloat("firstPersonCameraAngle", 45);
+		firstPersonCameraAngle = PlayerPrefs.GetFloat("firstPersonCameraAngle", 0);
 		FOV = PlayerPrefs.GetFloat("FOV", 100);
 		mass = PlayerPrefs.GetFloat("cameraMass", 0.25f);
 		isFirstPersonCamOn = bool.Parse(PlayerPrefs.GetString("isFirstPersonCamOn", "true"));
@@ -170,7 +170,7 @@ public static class QuadCharacteristics
 	}
 	public static void Load()
 	{
-		mass = PlayerPrefs.GetFloat("droneMass", 2f);
+		mass = PlayerPrefs.GetFloat("droneMass", 6f);
 	}
 }
 
@@ -184,6 +184,7 @@ public static class Parameters
 	{
 		PlayerPrefs.SetFloat("musicVolume", musicVolume);
 		PlayerPrefs.SetFloat("effectVolume", effectVolume);
+		PlayerPrefs.SetString("controlMap", controlMap.ToString());
 		PlayerPrefs.Save();
 	}
 
@@ -191,5 +192,10 @@ public static class Parameters
 	{
 		musicVolume = PlayerPrefs.GetFloat("musicVolume", 0);
 		effectVolume = PlayerPrefs.GetFloat("effectVolume", 0);
+		string controlMapStr = PlayerPrefs.GetString("controlMap", "Keyboard");
+		foreach (ControlMap cm in System.Enum.GetValues(typeof(ControlMap)))
+		{
+			if (cm.ToString() == controlMapStr) controlMap = cm;
+		}
 	}
 }

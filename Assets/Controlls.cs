@@ -139,7 +139,7 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
                     ""name"": ""Throttle"",
                     ""type"": ""Value"",
                     ""id"": ""ebc2b660-cac8-48c1-b42d-fd539052c87a"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true

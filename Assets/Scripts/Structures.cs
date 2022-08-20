@@ -33,3 +33,5 @@ public enum FlyMode{Stab = 1, Default = 0, Arm = -1,}
 public enum BladeType { Normal, Bullnose, Hybrid }
 public enum BladeMaterial { Plastic, Carbon, Composit }
 public enum ControlMap { FrSkyTaranis, FrSkyTaranisX7, Xbox, FSI6SEmulator, Keyboard }
+
+public enum Scene { MainMenuScene , SearchRaceScene, RaceScene, TestMap, WelcomeScene }

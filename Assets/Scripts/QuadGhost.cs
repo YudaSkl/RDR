@@ -12,7 +12,7 @@ public class QuadGhost : MonoBehaviour
     private void Start()
     {
         inputManager = quadBody.GetComponent<InputManager>();
-        transform.rotation = quadBody.transform.rotation;
+        transform.rotation = transform.parent.rotation;
     }
     public void SetUp(Quaternion rotation)
     {
