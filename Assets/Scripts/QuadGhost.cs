@@ -8,21 +8,35 @@ public class QuadGhost : MonoBehaviour
     InputManager inputManager;
     public float maxAngle;
     public float yawSpeed;
+    public float rollSpeed;
+    public float pitchSpeed;
     float yRot = 0;
+    float xRot = 0;
+    float zRot = 0;
+
     private void Start()
     {
         inputManager = quadBody.GetComponent<InputManager>();
-        transform.rotation = transform.parent.rotation;
     }
+
     public void SetUp(Quaternion rotation)
     {
         transform.rotation = rotation;
     }
-    void AngleGhost()
+
+    void AngleGhostStable()
     {
         float xRot = inputManager.inputValues.pitch * maxAngle;
         float zRot = inputManager.inputValues.roll * maxAngle;
         yRot += inputManager.inputValues.yaw * yawSpeed * Time.deltaTime;
+        transform.rotation = Quaternion.Euler(xRot, yRot, -zRot);
+    }
+
+    void AngleGhostAcro()
+    {
+        yRot += inputManager.inputValues.yaw * yawSpeed * Time.deltaTime;
+        zRot += inputManager.inputValues.roll * rollSpeed * Time.deltaTime;
+        xRot += inputManager.inputValues.pitch * pitchSpeed * Time.deltaTime;
         transform.rotation = Quaternion.Euler(xRot, yRot, -zRot);
     }
 
@@ -33,8 +47,20 @@ public class QuadGhost : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         transform.position = quadBody.transform.position;
-        AngleGhost();
+        switch (inputManager.flyMode)
+        {
+            case FlyMode.Stab: AngleGhostStable(); break;
+            case FlyMode.Acro: AngleGhostAcro(); break;
+            case FlyMode.Arm: break;
+            default: break;
+        }
+    }
+
+    public void ClearRotCash()
+    {
+        yRot = 0; xRot = 0; zRot = 0;
     }
 
     private void OnDrawGizmos()

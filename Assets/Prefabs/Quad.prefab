@@ -192,10 +192,9 @@ MonoBehaviour:
     propellerBL: {fileID: 1721490738269026384}
     propellerFR: {fileID: 96535354}
     propellerFL: {fileID: 1721490738269026387}
+  uiManager: {fileID: 0}
   pidManager: {fileID: 0}
   ghost: {fileID: 7642720989425128438}
-  spawnPoint: {fileID: 0}
-  flyMode: 0
   throttle_K: 10
 --- !u!114 &1068468500627182331
 MonoBehaviour:
@@ -235,18 +234,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a50d428e7a9df84f8d6f697fa8fd6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlMap: 0
+  playerID: 0
   inputValues:
     throttle: -1
     pitch: 0
     roll: 0
     yaw: 0
+  flyMode: 0
   convertedValues:
     throttle: 0
     roll: 0
     yaw: 0
     pitch: 0
-    convertion_K: 15
 --- !u!114 &8216845687628963841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,9 +668,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e22c061620f9f4db0555050ae850dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quad: {fileID: 2862510171155541058}
+  quadBody: {fileID: 0}
   maxAngle: 60
   yawSpeed: 100
+  rollSpeed: 200
+  pitchSpeed: 200
 --- !u!1 &1252168465634327772
 GameObject:
   m_ObjectHideFlags: 0
@@ -2262,7 +2263,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 100
   orthographic: 0

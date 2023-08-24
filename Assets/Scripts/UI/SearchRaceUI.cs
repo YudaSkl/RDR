@@ -19,7 +19,7 @@ public class SearchRaceUI : MonoBehaviourPunCallbacks
         roomOptions.MaxPlayers = 5;
         PhotonNetwork.CreateRoom(inputFieldRoomName.text, roomOptions);
     }
-
+   
     public void JoinRoom()
     {
         PhotonNetwork.JoinRoom(inputFieldRoomName.text);
@@ -28,12 +28,17 @@ public class SearchRaceUI : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        PhotonNetwork.LoadLevel(Scene.RaceScene.ToString());
+        PhotonNetwork.LoadLevel(Scenes.RaceScene.ToString());
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
     }
 
     public void BackButton()
     {
         PhotonNetwork.Disconnect();
-        SceneManager.LoadScene(Scene.MainMenuScene.ToString());
+        SceneManager.LoadScene(Scenes.MainMenuScene.ToString());
     }
 }

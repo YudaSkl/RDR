@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Windows;
+
 public class SliderSync : MonoBehaviour
 {
     private float value;
@@ -25,34 +27,39 @@ public class SliderSync : MonoBehaviour
     {
         
     }
+    private float IntCheck(float val)
+    {
+        if (isInt)
+            val = Mathf.Round(val);
+        else
+            val = Mathf.Round(val * 10) / 10f;
+
+        return val;
+    }
+    private float LimitsCheck(float val)
+    {
+        if (val > slider.maxValue)
+            val = slider.maxValue;
+        else if (val < slider.minValue)
+            val = slider.minValue;
+
+        return val;
+    }
 
     private float InputCheck()
     {
         if (text.text.Contains(".")) { text.text.Replace('.', ','); }
-        float input = float.Parse(text.text);
-        float val;
-        if (isInt)
-            val = Mathf.Round(input);
-        else
-            val = Mathf.Round(input * 10) / 10f;
-        if (val > slider.maxValue)
-            val = slider.maxValue;
-        else if (val < slider.minValue)
-            val = slider.minValue;
+        float val = float.Parse(text.text);
+        val = IntCheck(val);
+        val = LimitsCheck(val);
         return val;
     }
 
-    private float SliderCheck()
+    private float SlideCheck()
     {
-        float val;
-        if (isInt)
-            val = Mathf.Round(slider.value);
-        else
-            val = Mathf.Round(slider.value * 10) / 10f;
-        if (val > slider.maxValue)
-            val = slider.maxValue;
-        else if (val < slider.minValue)
-            val = slider.minValue;
+        float val = slider.value;
+        val = IntCheck(val);
+        //val = LimitsCheck(val);
         return val;
     }
 
@@ -69,7 +76,7 @@ public class SliderSync : MonoBehaviour
 
     public void OnSliderValueChanged() 
     {
-        float val = SliderCheck();
+        float val = SlideCheck();
         slider.value = val;
         text.text = val.ToString();
         value = val;

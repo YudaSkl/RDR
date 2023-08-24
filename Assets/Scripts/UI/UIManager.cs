@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Rewired;
 
 public class UIManager : MonoBehaviour
 {
-    public Canvas pauseMenu;
-    public Canvas playerUI;
+    public MenuPanelComponent pauseMenu;
+    public MenuPanelComponent playerUI;
     public Text speedValue;
     public Text flyModeValue;
     bool isPaused;
@@ -22,22 +23,29 @@ public class UIManager : MonoBehaviour
         //pauseMenu.transform.Find("Quad Panel").GetComponent<QuadSettings>().LoadData();
     }
 
-    public void SetSpeed(int speed)
+    public void ShowInfo(int speed, FlyMode flymode)
+    {
+        SetSpeed(speed);
+        SetFlyMode(flymode);
+    }
+
+    private void SetSpeed(int speed)
     {
         speedValue.text = speed.ToString() + " КМ/Ч";
     }
-    public void SetFlyMode(FlyMode fm)
+    private void SetFlyMode(FlyMode fm)
     {
         string str = "";
         switch (fm)
         {
             case FlyMode.Arm: str = "ARM"; flyModeValue.color = Color.red; break;
-            case FlyMode.Default: str = "Свободный"; flyModeValue.color = Color.yellow; break;
-            case FlyMode.Stab: str = "Стабилизация"; flyModeValue.color = Color.green; break;
+            case FlyMode.Acro: str = "Acro"; flyModeValue.color = Color.yellow; break;
+            case FlyMode.Stab: str = "Stable"; flyModeValue.color = Color.green; break;
             default: break;
         }
         flyModeValue.text = str;
     }
+
     public void ChangeUI()
     {
         UpdateData();
@@ -71,15 +79,14 @@ public class UIManager : MonoBehaviour
     private void SetPlayerUI()
     {
         Time.timeScale = 1;
-        pauseMenu.enabled = false;
-        playerUI.enabled = true;
+        playerUI.Show();
+        pauseMenu.Hide();
     }
-
     private void SetPauseUI()
     {
         Time.timeScale = 0;
-        pauseMenu.enabled = true;
-        playerUI.enabled = false;
+        playerUI.Hide();
+        pauseMenu.Show();
     }
 
     public void PressRespawn(Quad quadScript)
@@ -91,6 +98,6 @@ public class UIManager : MonoBehaviour
     public void PressExit()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(Scene.MainMenuScene.ToString());
+        SceneManager.LoadScene(Scenes.MainMenuScene.ToString());
     }
 }

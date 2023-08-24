@@ -26,8 +26,8 @@ public class Quad : MonoBehaviour
     private AudioSource audioSourceQuad;
     private float maxEffectVolume;
 
-    public FlyMode flyMode;
-
+    private bool isLanded;
+    public bool isArmed;
     public float throttle_K;
     #endregion
 
@@ -62,7 +62,7 @@ public class Quad : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            //Start();
+           // isLanded = true;
         }
         else if (collision.collider.tag == "Wall")
         {
@@ -73,23 +73,23 @@ public class Quad : MonoBehaviour
             //Start()
         }
     }
+    
     #region Setup
     void RigitbodySetup()
     {
-        body.mass = QuadCharacteristics.mass;
+        //float mass = 20;
+        float mass = (QuadCharacteristics.mass + CameraProperties.mass + Baterry.mass) * Parameters.massMultiplier ;
+        body.mass = mass;
     }
     void CameraSetup()
     {
-        cam.firstPersonCamera.transform.eulerAngles = new Vector3(-CameraProperties.firstPersonCameraAngle, 0, 0);
+        cam.firstPersonCamera.transform.rotation = Quaternion.Euler(new Vector3(-CameraProperties.angle, 0, 0));
         cam.firstPersonCamera.fieldOfView = CameraProperties.FOV;
-        cam.thirdPersonCamera.fieldOfView = CameraProperties.FOV;
-        if (CameraProperties.isFirstPersonCamOn)
-            ChangeCam(cam.firstPersonCamera);
-        else ChangeCam(cam.thirdPersonCamera);
-    }
-    void GhostSetup()
-    {
-        //ghost.SetUp(transform.parent.rotation);
+        //cam.thirdPersonCamera.fieldOfView = CameraProperties.FOV;
+        ChangeCam(cam.firstPersonCamera);
+        //if (CameraProperties.isFirstPersonCamOn)
+        //ChangeCam(cam.firstPersonCamera);
+        //else ChangeCam(cam.thirdPersonCamera);
     }
     void AudioSetup()
     {
@@ -100,7 +100,7 @@ public class Quad : MonoBehaviour
     public void SetUp()
     {
         RigitbodySetup();
-        GhostSetup();
+        ghost.SetUp(Quaternion.Euler(Vector3.zero));
         CameraSetup();
         AudioSetup();
     }
@@ -119,13 +119,14 @@ public class Quad : MonoBehaviour
     void FixedUpdate()
     {
         SetAudio();
+        if (isArmed) return;
         AddThrottlePower();
         AddStabilizePower(ghost.GetRotation());
         if (uiManager!=null && uiManager.isActiveAndEnabled)
         {
-            ShowInfo();
+            uiManager.ShowInfo(0, inputManager.flyMode);
         }
-        
+        //Debug.Log("(" + cam.firstPersonCamera.transform.eulerAngles.x + ", " + cam.firstPersonCamera.transform.eulerAngles.y + ", " + cam.firstPersonCamera.transform.eulerAngles.z + ")");
         //Debug.Log("Pitch_PID: (" + PID_Properties.pitch_P + ", " + PID_Properties.pitch_I + ", " + PID_Properties.pitch_D + ")");
         //Debug.Log("Control System: " + Parameters.controlMap.ToString());
     }
@@ -210,31 +211,24 @@ public class Quad : MonoBehaviour
     void PitchCorrection(float value)
     {
         //print("PitchCorrection value: " + value);
-        propellers.propellerBL.AddPower(-value / 2);
-        propellers.propellerBR.AddPower(-value / 2);
-        propellers.propellerFL.AddPower(value / 2);
-        propellers.propellerFR.AddPower(value / 2);
+        propellers.propellerBL.AddPower(-value / 4);
+        propellers.propellerBR.AddPower(-value / 4);
+        propellers.propellerFL.AddPower(value / 4);
+        propellers.propellerFR.AddPower(value / 4);
     }
 
     void RollCorrection(float value)
     {
-        propellers.propellerBL.AddPower(-value / 2);
-        propellers.propellerBR.AddPower(value / 2);
-        propellers.propellerFL.AddPower(-value / 2);
-        propellers.propellerFR.AddPower(value / 2);
+        propellers.propellerBL.AddPower(-value / 4);
+        propellers.propellerBR.AddPower(value / 4);
+        propellers.propellerFL.AddPower(-value / 4);
+        propellers.propellerFR.AddPower(value / 4);
     }
     void YawCorrection(float value)
     {
         body.AddRelativeTorque(new Vector3(0, value, 0));
     }
-    void ShowInfo()
-    {
-        int speed = Mathf.RoundToInt(Mathf.Max(body.velocity.x, -body.velocity.y, body.velocity.z));
-        if (speed < 0)
-            speed = 0;
-        uiManager.SetSpeed(speed);
-        uiManager.SetFlyMode(flyMode);
-    }
+
     public Rigidbody GetRigidbody()
     {
         return body;

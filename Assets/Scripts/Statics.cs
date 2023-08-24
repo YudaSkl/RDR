@@ -8,6 +8,7 @@ public static class DataManager
 		PID_Properties.Save();
 		Baterry.Save();
 		Parameters.Save();
+		CameraProperties.Save();
 		QuadCharacteristics.Save();
 	}
 
@@ -16,6 +17,7 @@ public static class DataManager
 		PID_Properties.Load();
 		Baterry.Load();
 		Parameters.Load();
+		CameraProperties.Load();
 		QuadCharacteristics.Load();
 	}
 
@@ -23,34 +25,6 @@ public static class DataManager
 	{
 		PlayerPrefs.DeleteAll();
 	}
-	/*
-	static public void TestLoad()
-    {
-		PID_Properties.pitch_P = 60;
-		PID_Properties.pitch_I = 40;
-		PID_Properties.pitch_D = 60;
-		PID_Properties.yaw_P = 60;
-		PID_Properties.yaw_I = 40;
-		PID_Properties.yaw_D = 60;
-		PID_Properties.roll_P = 60;
-		PID_Properties.roll_I = 40;
-		PID_Properties.roll_D = 60;
-		
-		CameraProperties.firstPersonCameraAngle = 0;
-		CameraProperties.FOV = 90;
-		CameraProperties.mass = 1;
-		CameraProperties.isFirstPersonCamOn = true;
-
-		Baterry.mass = 1;
-		Baterry.maxCharge = 100;
-		Baterry.charge = 65;
-
-		QuadCharacteristics.mass = 6;
-
-		Parameters.musicVolume = 1;
-		Parameters.effectVolume = 1;
-		//Parameters.controlMap = ControlMap.FrSkyTaranisX7;
-	}*/
 }
 
 public static class PID_Properties
@@ -115,25 +89,25 @@ public static class PID_Properties
 
 public static class CameraProperties
 {
-	static public float firstPersonCameraAngle;
+	static public float angle;
 	static public float FOV;
 	static public float mass;
 	static public bool isFirstPersonCamOn = true;
 
 	public static void Save()
 	{
-		PlayerPrefs.SetFloat("firstPersonCameraAngle", firstPersonCameraAngle);
+		PlayerPrefs.SetFloat("angle", angle);
 		PlayerPrefs.SetFloat("FOV", FOV);
-		PlayerPrefs.SetFloat("cameraMass", mass);
+		PlayerPrefs.SetFloat("mass", mass);
 		PlayerPrefs.SetString("isFirstPersonCamOn", isFirstPersonCamOn.ToString());
 
 		PlayerPrefs.Save();
 	}
 	public static void Load()
 	{
-		firstPersonCameraAngle = PlayerPrefs.GetFloat("firstPersonCameraAngle", 0);
+        angle = PlayerPrefs.GetFloat("angle", 0);
 		FOV = PlayerPrefs.GetFloat("FOV", 100);
-		mass = PlayerPrefs.GetFloat("cameraMass", 0.25f);
+		mass = PlayerPrefs.GetFloat("mass", 0.25f);
 		isFirstPersonCamOn = bool.Parse(PlayerPrefs.GetString("isFirstPersonCamOn", "true"));
 	}
 }
@@ -141,12 +115,12 @@ public static class CameraProperties
 public static class Baterry
 {
 	static public float mass;
-	static public float maxCharge;
+	static public float capacity;
 	static public float charge;
 
 	public static void Save()
 	{
-		PlayerPrefs.SetFloat("maxCharge", maxCharge);
+		PlayerPrefs.SetFloat("battaryCapacity", capacity);
 		PlayerPrefs.SetFloat("batteryMass", mass);
 
 		PlayerPrefs.Save();
@@ -154,7 +128,7 @@ public static class Baterry
 
 	public static void Load()
 	{
-		maxCharge = PlayerPrefs.GetFloat("maxCharge", 100);
+        capacity = PlayerPrefs.GetFloat("maxCharge", 30);
 		mass = PlayerPrefs.GetFloat("batteryMass", 0.25f);
 	}
 }
@@ -176,26 +150,32 @@ public static class QuadCharacteristics
 
 public static class Parameters
 {
-	static public float musicVolume;
+    static public float forceMultiplier;
+    static public float massMultiplier;
+    static public float musicVolume;
 	static public float effectVolume;
 	static public ControlMap controlMap;
 
 	public static void Save()
 	{
-		PlayerPrefs.SetFloat("musicVolume", musicVolume);
+        PlayerPrefs.SetFloat("forceMultiplier", forceMultiplier);
+        PlayerPrefs.SetFloat("massMultiplier", massMultiplier);
+        PlayerPrefs.SetFloat("musicVolume", musicVolume);
 		PlayerPrefs.SetFloat("effectVolume", effectVolume);
 		PlayerPrefs.SetString("controlMap", controlMap.ToString());
 		PlayerPrefs.Save();
-	}
+    }
 
-	public static void Load()
+    public static void Load()
 	{
-		musicVolume = PlayerPrefs.GetFloat("musicVolume", 0);
+        forceMultiplier = PlayerPrefs.GetFloat("forceMultiplier", 10);
+        massMultiplier = PlayerPrefs.GetFloat("massMultiplier", 20);
+        musicVolume = PlayerPrefs.GetFloat("musicVolume", 0);
 		effectVolume = PlayerPrefs.GetFloat("effectVolume", 0);
 		string controlMapStr = PlayerPrefs.GetString("controlMap", "Keyboard");
 		foreach (ControlMap cm in System.Enum.GetValues(typeof(ControlMap)))
 		{
 			if (cm.ToString() == controlMapStr) controlMap = cm;
 		}
-	}
+    }
 }

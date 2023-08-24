@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
     public List<MenuPanelComponent> panels;
     public GameObject QuadGameObj;
 
-    string serversUIName = "ServersUI";
+    string serversUIName = "LobbiesUI";
     void Start()
     {
         ShowPanel(null);
@@ -22,7 +22,9 @@ public class MainMenu : MonoBehaviourPunCallbacks
     }
     private void Awake()
     {
-
+        DataManager.LoadAll();
+        Parameters.controlMap = ControlMap.Radiomaster_TX12;
+        //Parameters.forceMultiplier = 5;
     }
 
     public void PressQuadSettings(string panelName)
@@ -62,6 +64,11 @@ public class MainMenu : MonoBehaviourPunCallbacks
     public void PressQuit()
     {
         Application.Quit();
+    }
+
+    public void PressControls()
+    {
+        SceneManager.LoadScene(Scenes.ControlMapperScene.ToString());
     }
 
     public void ShowPanel(string panelName)

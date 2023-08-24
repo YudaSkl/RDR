@@ -18,7 +18,13 @@ EditorBuildSettings:
     path: Assets/Scenes/RaceScene.unity
     guid: 5849b76094cca0d49a3e455eac973632
   - enabled: 1
-    path: Assets/Scenes/SearchRaceScene.unity
+    path: Assets/Scenes/LobbyScene.unity
     guid: 70758460576480746a5c2d76ef5291ba
+  - enabled: 1
+    path: Assets/Scenes/DestroyedCity.unity
+    guid: dab52a771d551ca40930496e8e13757a
+  - enabled: 1
+    path: Assets/Scenes/ControlMapperScene.unity
+    guid: 6dc110205e82c874f80ed2454e7320b7
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b41aa0295122be441a9dc28dbdab2609, type: 2}

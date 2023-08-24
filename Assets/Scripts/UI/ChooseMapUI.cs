@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ChooseMapUI : MonoBehaviour
 {
-    public List<Scene> scenes;
+    public List<Scenes> scenes;
     public List<Button> buttons;
 
     void Start()
@@ -31,6 +31,11 @@ public class ChooseMapUI : MonoBehaviour
 
     public void PressTestMapButton()
     {
-        SceneManager.LoadScene(Scene.TestMap.ToString());
+        SceneManager.LoadScene(Scenes.TestMap.ToString());
+    }
+
+    public void PressDestroyedCityButton()
+    {
+        SceneManager.LoadScene(Scenes.DestroyedCity.ToString());
     }
 }

@@ -2,25 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Rewired;
+
 public class WelcomeScreen : MonoBehaviour
 {
+
+    [SerializeField] private int playerID = 0;
+    [SerializeField] private Player controls;
     void Start()
     {
         DataManager.LoadAll();
-        //DataManager.TestLoad();
-        Parameters.controlMap = ControlMap.Keyboard;
+        controls = ReInput.players.GetPlayer(playerID);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (controls.GetAnyButtonDown())
         {
-            Pressed();
+            SceneManager.LoadScene(Scenes.MainMenuScene.ToString());
         }
-    }
-
-    void Pressed()
-    {
-        SceneManager.LoadScene(Scene.MainMenuScene.ToString());
     }
 }
